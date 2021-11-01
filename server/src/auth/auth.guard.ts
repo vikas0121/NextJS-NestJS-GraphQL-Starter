@@ -10,7 +10,6 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-// import { AuthenticationException } from './authentication.exception'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -18,10 +17,6 @@ export class AuthGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    // const ctx = GqlExecutionContext.create(context);
-    // const { req } = ctx.getContext();
-
-    // return Boolean(req.user && Object.values(Roles).includes(req.user.role));
     const gqlContext = GqlExecutionContext.create(context).getContext()
     const authHeader = gqlContext.req?.headers?.authorization
 
