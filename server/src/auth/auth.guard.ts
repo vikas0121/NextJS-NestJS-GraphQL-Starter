@@ -6,7 +6,7 @@
  * Then a use it add the decorator above your querie, mutation or subscription
  * @UseGuards(AuthGuard)
  */
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
@@ -25,26 +25,19 @@ export class AuthGuard implements CanActivate {
     const gqlContext = GqlExecutionContext.create(context).getContext()
     const authHeader = gqlContext.req?.headers?.authorization
 
-    if (!authHeader) {
-      //   throw new AuthenticationException('Authorization header not found.')
-      // }
+    if (!authHeader || !authHeader.startsWith('Bearer')) {
+      throw new UnauthorizedException('Bearer Token not present');
+    }
 
-      const [type, token] = authHeader.split(' ')
+    const [type, token] = authHeader.split(' ')
 
-      if (type !== 'Bearer') {
-        // throw new AuthenticationException(
-        //   `Authentication type 'Bearer' required. Found '${type}'`
-        // )
-      }
+    try {
+      gqlContext.token = token
+      gqlContext.user = this.auth.validateToken(token)
 
-      try {
-        gqlContext.token = token
-        gqlContext.user = this.auth.validateToken(token)
-
-        return true
-      } catch (error) {
-        // throw new AuthenticationException(error)
-      }
+      return true
+    } catch (error) {
+      throw new UnauthorizedException(error);
     }
   }
 }

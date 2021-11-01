@@ -1,15 +1,15 @@
-import { Resolver, Query, Context, Args, Mutation } from '@nestjs/graphql';
+import { AuthGuard } from '@auth/auth.guard';
+import { UseGuards } from '@nestjs/common';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { User } from '@user/user.schema';
+import { UserService } from '@user/user.service';
 import deepClean from 'deep-clean';
 import { get } from 'lodash';
-import { UserService } from '@user/user.service';
-import { User } from '@user/user.schema';
-import { UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@auth/auth.guard';
 import { GetUserInput, UpdateUserInput } from './user.input';
 
 @Resolver(() => User)
 export class UserResolver {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   @UseGuards(AuthGuard)
   @Mutation(() => User)
@@ -23,6 +23,7 @@ export class UserResolver {
     return this.userService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @Query(() => User, { nullable: true })
   async me(@Context() context) {
     return this.userService.findOne({ _id: context.req.user });
