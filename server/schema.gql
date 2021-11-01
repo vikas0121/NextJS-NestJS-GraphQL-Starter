@@ -26,17 +26,9 @@ enum Roles {
 }
 
 type Query {
-  gitHubAuth(input: SocialAuthInput!): User!
-  redditAuth(input: SocialAuthInput!): User!
-  googleAuth(input: SocialAuthInput!): User!
-  getGoogleAuthURL: String!
   users: [User!]!
   me: User
   user(input: GetUserInput!): User
-}
-
-input SocialAuthInput {
-  code: String
 }
 
 input GetUserInput {
@@ -44,19 +36,18 @@ input GetUserInput {
 }
 
 type Mutation {
-  sendMessage(input: SendMessageInput!): Message!
-  logout: User
   updateUser(input: UpdateUserInput!): User!
-}
-
-input SendMessageInput {
-  body: String!
+  sendMessage(input: SendMessageInput!): Message!
 }
 
 input UpdateUserInput {
   email: String
   name: String
   bio: String
+}
+
+input SendMessageInput {
+  body: String!
 }
 
 type Subscription {

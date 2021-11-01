@@ -1,10 +1,10 @@
-import { get } from 'lodash';
 import { Injectable, NestMiddleware } from '@nestjs/common';
+import { get } from 'lodash';
 import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   async use(
     req: Request & { user: string; ip: string },
@@ -16,8 +16,8 @@ export class AuthMiddleware implements NestMiddleware {
       return next();
     }
 
-    const refreshToken = await this.authService.getSession({ token });
-    req.user = get(refreshToken, 'user', null);
+    // const refreshToken = await this.authService.getSession({ token });
+    // req.user = get(refreshToken, 'user', null);
 
     return next();
   }

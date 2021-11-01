@@ -1,11 +1,11 @@
-import { Model, CreateQuery, UpdateQuery, FilterQuery } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 import { User } from './user.schema';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+  constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
 
   async updateById({
     userId,
@@ -19,7 +19,7 @@ export class UserService {
       .exec();
   }
 
-  async create(args: CreateQuery<User>): Promise<User> {
+  async create(args: any): Promise<User> {
     return this.userModel.create(args);
   }
 
